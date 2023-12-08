@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:8000',  // Ganti dengan origin yang sesuai
+    origin: '*',  // Ganti dengan origin yang sesuai
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
