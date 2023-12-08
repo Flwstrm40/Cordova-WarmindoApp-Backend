@@ -41,7 +41,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Selamat datang di proyek Express.js dengan MongoDB!');
+    res.send('Selamat datang di proyek Express.js dengan MongoDB!!!!');
 })
 app.get('/blog', (req, res) => {
     res.send('Blog!!! halo ini blog');
