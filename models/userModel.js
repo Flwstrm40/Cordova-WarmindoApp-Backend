@@ -5,8 +5,7 @@ const userSchema = new mongoose.Schema(
     {
         id_pengguna: {
             type: String,
-            required: true,
-            unique: true
+            unique: true,
         },
         username: {
             type: String,
@@ -24,8 +23,9 @@ const userSchema = new mongoose.Schema(
         },
         id_role: {
             type: String,
-            enum: ['E1', 'E2', 'E3', 'E4'],
-            required: true
+            // enum: ['E1', 'E2', 'E3', 'E4'],
+            required: true,
+            ref: 'Role'
         },
         status: {
             type: String,

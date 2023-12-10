@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('./models/userModel');
+const Role = require('./models/roleModel');
+const Warung = require('./models/warungModel');
+const Transaksi = require('./models/transactionModel');
 const bcrypt = require('bcrypt');
 const cors = require('cors'); 
 const app = express();
@@ -15,7 +18,16 @@ app.use(cors({
 
 // routes
 
+// ---------------------------------------- HOME ----------------------------------------
+app.get('/', (req, res) => {
+    res.send('Selamat datang di proyek Express.js dengan MongoDB!!!!');
+})
+app.get('/blog', (req, res) => {
+    res.send('halo ini blog');
+})
 
+
+// ---------------------------------------- LOGIN ----------------------------------------
 // Endpoint untuk login
 app.post('/login', async (req, res) => {
     try {
@@ -40,13 +52,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/', (req, res) => {
-    res.send('Selamat datang di proyek Express.js dengan MongoDB!!!!');
-})
-app.get('/blog', (req, res) => {
-    res.send('Blog!!! halo ini blog');
-})
-
+// ---------------------------------------- CRUD USER ----------------------------------------
+// Read all user
 app.get('/user', async(req, res) => {
     try{
         const user = await User.find({});
@@ -56,7 +63,7 @@ app.get('/user', async(req, res) => {
         res.status(500).send({message: error.message});
     }
 })
-
+// Create user
 app.post('/user', async(req, res) =>{
     try{
         const user = await User.create(req.body);
@@ -66,12 +73,50 @@ app.post('/user', async(req, res) =>{
         res.status(500).send({message: error.message});
     }
 })
+// update user
+
+// delete user
+
+// ---------------------------------------- CRUD ROLE ----------------------------------------
+// Read all role
+app.get('/role', async(req, res) => {
+    try{
+        const user = await Role.find({});
+        res.status(200).json({user});
+    }catch(error){
+        console.log(error.message);
+        res.status(500).send({message: error.message});
+    }
+})
+// Create role
+app.post('/role', async(req, res) =>{
+    try{
+        const user = await Role.create(req.body);
+        res.status(200).json({user});
+    }catch(error){
+        console.log(error.message);
+        res.status(500).send({message: error.message});
+    }
+})
+// update role
+
+// delete role
+
+
 
 
 mongoose.set("strictQuery", false);
 mongoose
 .connect('mongodb+srv://flwstrm:Vanitas_40@cluster0.he7vqbb.mongodb.net/node-API?retryWrites=true&w=majority')
-.then(() => {
+.then(async () => {
+    // Update existing documents with null id_pengguna
+    await User.updateMany({ id_pengguna: null }, { id_pengguna: 'someUniqueValue' });
+    // Drop the index on id_pengguna
+    await User.collection.dropIndex("id_pengguna_1");
+    // Recreate the unique index on id_pengguna
+    await User.collection.createIndex({ id_pengguna: 1 }, { unique: true });
+
+
     app.listen(3000, () => {
         console.log('Server berjalan di http://localhost:3000')
     });
