@@ -44,8 +44,10 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid password' });
         }
 
-        // Jika login berhasil, kirim data user yang berhasil login
-        res.status(200).json({ user });
+        const role = await Role.findOne({ id_role: user.id_role });
+
+        // Jika login berhasil, kirim data user beserta rolenya
+        res.status(200).json({ user: { ...user.toObject(), role } });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -64,18 +66,59 @@ app.get('/user', async(req, res) => {
     }
 })
 // Create user
-app.post('/user', async(req, res) =>{
-    try{
+// Create user
+app.post('/user', async (req, res) => {
+    try {
+        const { id_role } = req.body;
+
+        // Check if the specified role exists
+        const roleExists = await Role.exists({ id_role });
+
+        if (!roleExists) {
+            return res.status(400).json({ message: 'Role does not exist' });
+        }
+
         const user = await User.create(req.body);
-        res.status(200).json({user});
-    }catch(error){
+        res.status(200).json({ user });
+    } catch (error) {
         console.log(error.message);
-        res.status(500).send({message: error.message});
+        res.status(500).send({ message: error.message });
     }
-})
+});
+
 // update user
+// Update user
+app.put('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { id_role } = req.body;
+
+        // Check if the specified role exists
+        const roleExists = await Role.exists({ id_role });
+
+        if (!roleExists) {
+            return res.status(400).json({ message: 'Role does not exist' });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+        res.status(200).json({ user: updatedUser });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
 
 // delete user
+app.delete('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const deletedUser = await User.findByIdAndDelete(userId);
+        res.status(200).json({ user: deletedUser });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
 
 // ---------------------------------------- CRUD ROLE ----------------------------------------
 // Read all role
@@ -99,8 +142,30 @@ app.post('/role', async(req, res) =>{
     }
 })
 // update role
+app.put('/role/:id', async (req, res) => {
+    try {
+        const roleId = req.params.id;
+        const updatedRole = await Role.findByIdAndUpdate(roleId, req.body, { new: true });
+        res.status(200).json({ role: updatedRole });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
 
 // delete role
+app.delete('/role/:id', async (req, res) => {
+    try {
+        const roleId = req.params.id;
+        // Delete the role and find associated users to delete them as well
+        const deletedRole = await Role.findByIdAndDelete(roleId);
+        await User.deleteMany({ id_role: roleId });
+        res.status(200).json({ role: deletedRole });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
 
 
 
