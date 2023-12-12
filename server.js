@@ -4,7 +4,7 @@ const User = require('./models/userModel');
 const Role = require('./models/roleModel');
 const Warung = require('./models/warungModel');
 const Transaksi = require('./models/transactionModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const cors = require('cors'); 
 const app = express();
 
