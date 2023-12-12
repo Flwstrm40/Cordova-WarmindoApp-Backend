@@ -169,6 +169,124 @@ app.delete('/role/:id', async (req, res) => {
 
 
 
+// ------------------------------------------ CRUD WARUNG ----------------------------------------
+
+// Read all warung
+app.get('/warung', async (req, res) => {
+    try {
+        const warung = await Warung.find({});
+        res.status(200).json({ warung });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Get total number of warung
+app.get('/total_warung', async (req, res) => {
+    try {
+        const total_warung = await Warung.countDocuments({});
+        res.status(200).json({ total_warung });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Create warung
+app.post('/warung', async (req, res) => {
+    try {
+        const warung = await Warung.create(req.body);
+        res.status(200).json({ warung });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Update warung
+app.put('/warung/:id', async (req, res) => {
+    try {
+        const warungId = req.params.id;
+        const updatedWarung = await Warung.findByIdAndUpdate(warungId, req.body, { new: true });
+        res.status(200).json({ warung: updatedWarung });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Delete warung
+app.delete('/warung/:id', async (req, res) => {
+    try {
+        const warungId = req.params.id;
+        const deletedWarung = await Warung.findByIdAndDelete(warungId);
+        res.status(200).json({ warung: deletedWarung });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// ---------------------------------------- CRUD TRANSAKSI ----------------------------------------
+
+// Read all transaksi
+app.get('/transaksi', async (req, res) => {
+    try {
+        const transaksi = await Transaksi.find({});
+        res.status(200).json({ transaksi });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Get total number of transaksi
+app.get('/total_transaksi', async (req, res) => {
+    try {
+        const total_transaksi = await Transaksi.countDocuments({});
+        res.status(200).json({ total_transaksi });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Create transaksi
+app.post('/transaksi', async (req, res) => {
+    try {
+        const transaksi = await Transaksi.create(req.body);
+        res.status(200).json({ transaksi });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Update transaksi
+app.put('/transaksi/:id', async (req, res) => {
+    try {
+        const transaksiId = req.params.id;
+        const updatedTransaksi = await Transaksi.findByIdAndUpdate(transaksiId, req.body, { new: true });
+        res.status(200).json({ transaksi: updatedTransaksi });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+// Delete transaksi
+app.delete('/transaksi/:id', async (req, res) => {
+    try {
+        const transaksiId = req.params.id;
+        const deletedTransaksi = await Transaksi.findByIdAndDelete(transaksiId);
+        res.status(200).json({ transaksi: deletedTransaksi });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
 
 mongoose.set("strictQuery", false);
 mongoose
