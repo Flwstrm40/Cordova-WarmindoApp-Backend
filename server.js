@@ -143,8 +143,8 @@ app.delete('/user/:id', async (req, res) => {
 // Read all role
 app.get('/role', async(req, res) => {
     try{
-        const user = await Role.find({});
-        res.status(200).json({user});
+        const role = await Role.find({});
+        res.status(200).json({role});
     }catch(error){
         console.log(error.message);
         res.status(500).send({message: error.message});
@@ -195,15 +195,20 @@ app.put('/role/:id', async (req, res) => {
 app.delete('/role/:id', async (req, res) => {
     try {
         const roleId = req.params.id;
+
+        const roleFinder = await Role.findById(roleId);
+        const roleIdDeleted = roleFinder.id_role;
         // Delete the role and find associated users to delete them as well
         const deletedRole = await Role.findByIdAndDelete(roleId);
-        await User.deleteMany({ id_role: roleId });
-        res.status(200).json({ role: deletedRole });
+        const deletedUsers = await User.deleteMany({ id_role: roleIdDeleted });
+
+        res.status(200).json({ role: deletedRole, deletedUsers });
     } catch (error) {
         console.log(error.message);
         res.status(500).send({ message: error.message });
     }
 });
+
 
 
 
