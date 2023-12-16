@@ -86,7 +86,26 @@ app.post('/user', async (req, res) => {
     }
 });
 
-// update user
+// get user with id and the role
+app.get('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const role = await Role.findOne({ id_role: user.id_role });
+
+        res.status(200).json({ user: { ...user.toObject(), role } });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+
 // Update user
 app.put('/user/:id', async (req, res) => {
     try {
@@ -131,6 +150,25 @@ app.get('/role', async(req, res) => {
         res.status(500).send({message: error.message});
     }
 })
+
+//
+// Get role by ID
+app.get('/role/:id', async (req, res) => {
+    try {
+        const roleId = req.params.id;
+        const role = await Role.findById(roleId);
+        
+        if (!role) {
+            return res.status(404).json({ message: 'Role not found' });
+        }
+
+        res.status(200).json({ role });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
+
 // Create role
 app.post('/role', async(req, res) =>{
     try{
